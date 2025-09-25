@@ -39,7 +39,7 @@ def create_pie_chart(df_group, title):
 
 
 #==================   END POINT DE GRÁFICAS   =========================
-@app.route("/grafica_ddos", methods= ["POST"])
+@app.route("/grafica_ddos", methods= ["GET"])
 def graf_ddos():
     # Conexión a la base de datos
     conn = get_connection()
@@ -58,7 +58,7 @@ def graf_ddos():
     fig_dict = create_pie_chart(df_group, "DDOS")
     return jsonify(fig_dict)
 
-@app.route("/grafica_phishing", methods= ["POST"])
+@app.route("/grafica_phishing", methods= ["GET"])
 def graf_phishing():
     # Conexión a la base de datos
     conn = get_connection()
@@ -78,7 +78,7 @@ def graf_phishing():
     fig_dict = create_pie_chart(df_group, "PHISHING")
     return jsonify(fig_dict)
 
-@app.route("/grafica_login", methods= ["POST"])
+@app.route("/grafica_login", methods= ["GET"])
 def graf_login():
     # Conexión a la base de datos
     conn = get_connection()
