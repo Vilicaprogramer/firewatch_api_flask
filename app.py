@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import plotly.express as px
 import plotly.io as pio
 from flask_cors import CORS
@@ -65,10 +65,8 @@ def graf_phishing():
     conn = get_connection()
 
     query = """
-    SELECT indicators, COUNT(*) AS cantidad
-    FROM logs
+    SELECT * FROM logs
     WHERE indicators IN ('Correo seguro', 'Posible phishing')
-    GROUP BY indicators;
     """
     df = pd.read_sql(query, conn)
     conn.close()
@@ -100,8 +98,6 @@ def graf_login():
 
 
 #==================   END POINT DE PDFs   =========================
-from flask import Flask, request, send_file
-from flask_cors import CORS
 import io
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
