@@ -52,6 +52,8 @@ def malware_type_detection(record):
         clean_data_ddos(record)
     else:
         tres_en_uno(record)
+    #elif:
+        #clean_data_phishing(dict)
 
 def background_logger():
     global is_logging
@@ -60,6 +62,7 @@ def background_logger():
     # cargar datasets una vez
     df_int_login = pd.read_csv("https://desafiogrupo1.s3.us-east-1.amazonaws.com/df1_alimentacion_login.csv")
     df_ddos = pd.read_csv("https://desafiogrupo1.s3.us-east-1.amazonaws.com/df_alimentacion_DDOS.csv")
+    #df_phishing = pd.read_csv("https://desafiogrupo1.s3.us-east-1.amazonaws.com/df_prueba_phising.csv")
 
     login_list = (
         df_int_login.to_dict(orient="records")
@@ -73,7 +76,7 @@ def background_logger():
         except Exception as e:
             app.logger.error(f"Error procesando log: {e}")
 
-        time.sleep(30)  # espera 30 segundos antes del siguiente
+        time.sleep(30)
 
     app.logger.info("background_logger detenido")
 
@@ -143,7 +146,7 @@ def graf_login():
     query = """
     SELECT *
     FROM public.logs
-    WHERE indicators IN ('Robo de credenciales', 'Cuenta comprometida', 'Ataque fallido', 'Log in válido');
+    WHERE indicators IN ('Robo de credenciales', 'Cuenta comprometida', 'Ataque fallido', 'Login válido');
     """
     df = pd.read_sql(query, conn)
     conn.close()
