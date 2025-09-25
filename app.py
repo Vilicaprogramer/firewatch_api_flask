@@ -42,11 +42,7 @@ def create_pie_chart(df_group, title):
 import threading
 import time
 import random
-import pandas as pd
-from flask import Flask, request, jsonify
 from limpieza_datos import clean_data_ddos, tres_en_uno
-
-app = Flask(__name__)
 
 # Control global
 is_logging = False
