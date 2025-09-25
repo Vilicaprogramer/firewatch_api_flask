@@ -10,7 +10,8 @@ import os
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
-CORS(app)
+#CORS(app)
+CORS(app, origins=["http://localhost:5173"])
 
 def get_connection():
     # Conexión a la base de datos
