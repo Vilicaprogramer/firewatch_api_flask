@@ -38,6 +38,68 @@ def create_pie_chart(df_group, title):
     )
     return json.loads(pio.to_json(fig))
 
+#==================   END POINT ATAQUES EN DIRECTO   =========================
+import threading
+import time
+import random
+import pandas as pd
+from flask import Flask, request, jsonify
+from limpieza_datos import clean_data_ddos, tres_en_uno
+
+app = Flask(__name__)
+
+# Control global
+is_logging = False
+
+def malware_type_detection(record):
+    if 'Destination Port' in record.keys():
+        clean_data_ddos(record)
+    else:
+        tres_en_uno(record)
+
+def background_logger():
+    global is_logging
+    is_logging = True
+
+    # cargar datasets una vez
+    df_int_login = pd.read_csv("https://desafiogrupo1.s3.us-east-1.amazonaws.com/df1_alimentacion_login.csv")
+    df_ddos = pd.read_csv("https://desafiogrupo1.s3.us-east-1.amazonaws.com/df_alimentacion_DDOS.csv")
+
+    login_list = (
+        df_int_login.to_dict(orient="records")
+        + df_ddos.to_dict(orient="records")
+    )
+
+    while is_logging:  # bucle infinito hasta que paremos
+        record = random.choice(login_list)   # elige un registro al azar
+        try:
+            malware_type_detection(record)
+        except Exception as e:
+            app.logger.error(f"Error procesando log: {e}")
+
+        time.sleep(30)  # espera 30 segundos antes del siguiente
+
+    app.logger.info("background_logger detenido")
+
+@app.route("/start-logging", methods=["POST"])
+def start_logging():
+    """Se llama desde React al hacer login."""
+    global is_logging
+    if not is_logging:
+        thread = threading.Thread(target=background_logger, daemon=True)
+        thread.start()
+        return jsonify({"status": "logging started"}), 200
+    else:
+        return jsonify({"status": "already running"}), 400
+
+@app.route("/stop-logging", methods=["POST"])
+def stop_logging():
+    """Se llama desde React al hacer logout."""
+    global is_logging
+    is_logging = False
+    return jsonify({"status": "logging stopped"}), 200
+
+
 
 #==================   END POINT DE GRÁFICAS   =========================
 @app.route("/grafica_ddos", methods= ["GET"])
