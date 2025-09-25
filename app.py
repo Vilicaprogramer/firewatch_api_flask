@@ -108,7 +108,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus.flowables import HRFlowable
 
 @app.route("/download_pdf_phishing", methods=["POST"])
-def download_pdf():
+def download_pdf_phishing():
     data = request.get_json()
 
     logs_id = data.get("logs_id", "Sin información adicional")
@@ -193,7 +193,7 @@ def download_pdf():
     )
 
 @app.route("/download_pdf_login", methods=["POST"])
-def download_pdf():
+def download_pdf_login():
     data = request.get_json()
 
     log_id = data.get("log_id", "Sin información adicional")
@@ -255,7 +255,7 @@ def download_pdf():
     )
 
 @app.route("/download_pdf_ddos", methods=["POST"])
-def download_pdf():
+def download_pdf_ddos():
     data = request.get_json()
 
     # Extraer todos los campos
